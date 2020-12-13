@@ -2,10 +2,9 @@ package plants
 
 import (
 	"encoding/json"
+	"lab3/server/tools"
 	"log"
 	"net/http"
-
-	"github.com/roman-mazur/chat-channels-example/server/tools"
 )
 
 // Plants HTTP handler.

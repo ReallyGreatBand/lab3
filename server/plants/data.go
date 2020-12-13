@@ -20,7 +20,7 @@ func NewStore(db *sql.DB) *Store {
 }
 
 func (s *Store) ListPlants() ([]*Plant, error) {
-	rows, err := s.Db.Query("select * from Plants p where p.soilMoistureLevel < 0.2;")
+	rows, err := s.Db.Query("select * from plants p where p.soil_moisture_level < 0.2;")
 	if err != nil {
 		return nil, err
 	}
@@ -42,9 +42,14 @@ func (s *Store) ListPlants() ([]*Plant, error) {
 }
 
 func (s *Store) UpdatePlant(id int, soilMoistureLevel float64) error {
-	if soilMoistureLevel < 1 && soilMoistureLevel > 0 {
-		return fmt.Errorf("Wrong soil moisture level. Must be in interval (0; 1)")
+	rows, err := s.Db.Query("select * from plants p where id = $1", id)
+	if err != nil {
+		return err
 	}
-	_, err := s.Db.Exec("update Plants.Plants set soilMoistureLevel = $1 where id = $2", +soilMoistureLevel, id)
+	if !rows.Next() {
+		return fmt.Errorf("Record with given id does not exist")
+	}
+	_, err = s.Db.Exec("update plants set soil_moisture_level = $1 where id = $2",
+		+soilMoistureLevel, id)
 	return err
 }

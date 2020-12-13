@@ -5,8 +5,8 @@ const Client = (serverURL) => {
     const client = http.Client(serverURL);
 
     return {
-        listPlants: () => client.get('/plants'),
-        updatePlant: (id, soilMoistureLevel) => client.post('/plants', { id, soilMoistureLevel })
+        listPlants: async () => await client.get('/plants'),
+        updatePlant: async (id, soilMoistureLevel) => await client.post('/plants', { id, soilMoistureLevel })
     }
 };
 

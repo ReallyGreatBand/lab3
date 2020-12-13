@@ -16,14 +16,19 @@ type Connection struct {
 
 func (c *Connection) ConnectionURL() string {
 	dbUrl := &url.URL{
-		Scheme: "Plants",
+		Scheme: "postgres", // this field is actually driver name and should always be "postgres"
 		Host:   c.Host,
 		User:   url.UserPassword(c.User, c.Password),
 		Path:   c.DbName,
 	}
 	if c.DisableSSL {
 		dbUrl.RawQuery = url.Values{
-			"sslmode": []string{"disable"},
+			"sslmode":     []string{"disable"},
+			"search_path": []string{"plants"},
+		}.Encode()
+	} else {
+		dbUrl.RawQuery = url.Values{
+			"search_path": []string{"plants"},
 		}.Encode()
 	}
 	return dbUrl.String()

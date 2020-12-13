@@ -3,22 +3,30 @@ const fetch = require('node-fetch');
 
 const Client = (serverURL) => {
     const respHandler = (resp) => {
-        if (resp.ok) {
+        if (resp.status === 200) {
             return resp.json();
+        } else if (resp.status === 400) {
+            console.log(`${resp.status}: ${resp.statusText}`);
+            return resp.json();
+        } else {
+            throw new Error(`Unexpected response from server ${resp.status}: ${resp.statusText}`);
         }
-        throw new Error(`Unexpected response from the server ${resp.status} ${resp.statusText}`);
     };
 
     return {
-        get: async (path) => {
-            return await fetch(`${serverURL}${path}`);
+        get:  (path) => {
+            return fetch(`${serverURL}${path}`)
+                .then(res => respHandler(res))
+                .catch(err => console.log(err));
         },
-        post: async (path, data) => {
-            return await fetch(`${serverURL}${path}`, {
+        post: (path, data) => {
+            return fetch(`${serverURL}${path}`, {
                 method: 'post',
                 body: JSON.stringify(data),
                 headers: {'Content-Type': 'application/json'}
-            });
+            })
+                .then(res => respHandler(res))
+                .catch(err => console.log(err));
         }
     };
 };

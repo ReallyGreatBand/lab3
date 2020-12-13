@@ -17,7 +17,7 @@ func NewDbConnection() (*sql.DB, error) {
 		DbName:     "postgres",
 		User:       "postgres",
 		Password:   "postgres",
-		Host:       "localhost",
+		Host:       "localhost:5433",
 		DisableSSL: true,
 	}
 	return conn.Open()

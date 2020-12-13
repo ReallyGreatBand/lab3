@@ -30,9 +30,16 @@ func handleUpdatePlant(r *http.Request, rw http.ResponseWriter, store *Store) {
 		tools.WriteJsonBadRequest(rw, "bad JSON payload")
 		return
 	}
+	if p.SoilMoistureLevel > 1 || p.SoilMoistureLevel < 0 {
+		log.Printf("Wrong soil moisture level. Must be in interval (0; 1)")
+		tools.WriteJsonBadRequest(rw, "Wrong soil moisture level. Must be in interval (0; 1)")
+		return
+	}
 	err := store.UpdatePlant(p.Id, p.SoilMoistureLevel)
 	if err == nil {
-		tools.WriteJsonOk(rw, &p)
+		tools.WriteJsonOk(rw, "Successfully updated")
+	} else if err.Error() == "Record with given id does not exist" {
+		tools.WriteJsonBadRequest(rw, err.Error())
 	} else {
 		log.Printf("Error updating record: %s", err)
 		tools.WriteJsonInternalError(rw)

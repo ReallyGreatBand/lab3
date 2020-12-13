@@ -1,4 +1,4 @@
-Лабораторна робота №2
+Лабораторна робота №3
 ---
 [ReallyGreatBand](https://github.com/ReallyGreatBand)
 Учасники:
